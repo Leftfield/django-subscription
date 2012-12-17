@@ -20,7 +20,10 @@ _TIME_UNIT_CHOICES=(
     ('M', ugettext_lazy('Month')),
     ('Y', ugettext_lazy('Year')),
     )
-
+CURRENCY_TYPES=(
+  ("EUR","Euro"),
+  ("GBP","Pound sterling"),
+)
 class Subscription(models.Model):
     name = models.CharField(max_length=100, unique=True, null=False)
     slug = models.SlugField(max_length=100,)
@@ -35,7 +38,7 @@ class Subscription(models.Model):
                                        choices = ((None, ugettext_lazy("No recurrence")),)
                                        + _TIME_UNIT_CHOICES)
     group = models.ForeignKey(auth.models.Group, null=False, blank=False)
-
+    currency = models.CharField(max_length=3, choices=CURRENCY_TYPES, default="EUR")
     _PLURAL_UNITS = {
         'D': 'days',
         'W': 'weeks',
@@ -69,15 +72,15 @@ class Subscription(models.Model):
     def get_pricing_display(self):
         if not self.price: return u'Free'
         elif self.recurrence_period:
-            return ungettext('%(price).02f / %(unit)s',
-                             '%(price).02f / %(period)d %(unit_plural)s',
+            return ungettext('%(price).02f / %(unit)s %(currency)s',
+                             '%(price).02f / %(period)d %(unit_plural)s %(currency)s',
                              self.recurrence_period) % {
                 'price':self.price,
                 'unit':self.get_recurrence_unit_display(),
                 'unit_plural':_(self._PLURAL_UNITS[self.recurrence_unit],),
                 'period':self.recurrence_period,
                 }
-        else: return _('%(price).02f one-time fee') % { 'price':self.price }
+        else: return _('%(price).02f %(currency)s one-time fee') % { 'price':self.price,'currency':self.currency }
 
     def get_trial_display(self):
         if self.trial_period:
