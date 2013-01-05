@@ -79,6 +79,7 @@ class Subscription(models.Model):
                 'unit':self.get_recurrence_unit_display(),
                 'unit_plural':_(self._PLURAL_UNITS[self.recurrence_unit],),
                 'period':self.recurrence_period,
+                'currency':self.currency,
                 }
         else: return _('%(price).02f %(currency)s one-time fee') % { 'price':self.price,'currency':self.currency }
 
