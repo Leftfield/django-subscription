@@ -27,6 +27,7 @@ CURRENCY_TYPES=(
 class Subscription(models.Model):
     name = models.CharField(max_length=100, unique=True, null=False)
     slug = models.SlugField(max_length=100,)
+    enabled = models.BooleanField(True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=64, decimal_places=2)
     trial_period = models.PositiveIntegerField(null=True, blank=True)
