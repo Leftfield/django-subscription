@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Subscription.enabled'
         db.add_column('subscription_subscription', 'enabled',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
                       keep_default=False)
 
 
@@ -60,7 +60,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "('price', '-recurrence_period')", 'object_name': 'Subscription'},
             'currency': ('django.db.models.fields.CharField', [], {'default': "'EUR'", 'max_length': '3'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'enabled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'enabled': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.Group']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
