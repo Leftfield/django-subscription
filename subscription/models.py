@@ -122,7 +122,7 @@ class UserSubscriptionManager(models.Manager):
         
         Run this on a cronjob, every X minutes/hours/days.
         """
-        for us in self.objects.get(expires__lt=datetime.date.today()):
+        for us in self.filter(expires__lt=datetime.date.today()):
             us.fix()
 
 class ActiveUSManager(UserSubscriptionManager):
