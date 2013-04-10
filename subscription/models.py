@@ -195,6 +195,9 @@ class UserSubscription(models.Model):
         """Fix group membership if not valid()."""
         if not self.valid():
             if self.expired() or not self.active:
+                if self.active:
+                    self.active = False
+                    self.save()
                 self._unsubscribe()
                 if self.cancelled:
                     self.delete()
