@@ -2,7 +2,7 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.contrib import auth
+from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext as _, ungettext, ugettext_lazy
 
 import signals, utils
@@ -38,7 +38,7 @@ class Subscription(models.Model):
     recurrence_unit = models.CharField(max_length=1, null=True,
                                        choices = ((None, ugettext_lazy("No recurrence")),)
                                        + _TIME_UNIT_CHOICES)
-    group = models.ForeignKey(auth.models.Group, null=False, blank=False)
+    group = models.ForeignKey(Group, null=False, blank=False)
     currency = models.CharField(max_length=3, choices=CURRENCY_TYPES, default="EUR")
     _PLURAL_UNITS = {
         'D': 'days',
@@ -103,14 +103,14 @@ def __user_get_subscription(user):
         if sl: user._subscription_cache = sl[0]
         else: user._subscription_cache = None
     return user._subscription_cache
-auth.models.User.add_to_class('get_subscription', __user_get_subscription)
+User.add_to_class('get_subscription', __user_get_subscription)
 
 def __user_get_active_subscription(user):
     try:
         return user.usersubscription_set.get(active=True)
     except UserSubscription.DoesNotExist:
         return None
-auth.models.User.add_to_class('get_active_subscription',__user_get_active_subscription)
+User.add_to_class('get_active_subscription',__user_get_active_subscription)
 
 class UserSubscriptionManager(models.Manager):
     def unsubscribe_expired(self):
@@ -131,7 +131,7 @@ class ActiveUSManager(UserSubscriptionManager):
         return super(ActiveUSManager, self).get_query_set().filter(active=True)
 
 class UserSubscription(models.Model):
-    user = models.ForeignKey(auth.models.User)
+    user = models.ForeignKey(User)
     subscription = models.ForeignKey(Subscription)
     expires = models.DateField(null = True, default=datetime.date.today)
     active = models.BooleanField(default=True)
