@@ -201,7 +201,11 @@ class UserSubscription(models.Model):
                 self._unsubscribe()
                 if self.cancelled:
                     self.delete()
-            else: self._subscribe()
+            else:
+                if not self.active:
+                    self.active = True
+                    self.save()
+                self._subscribe()
 
     def activate(self,send_signal=True):
         """Activate this user subscription plan.
