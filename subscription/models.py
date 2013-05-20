@@ -242,7 +242,7 @@ class UserSubscription(models.Model):
             if old_us.cancelled:
                 old_us.delete()
             else:
-                old_us.active = False
+                #old_us.active = False
                 old_us._unsubscribe()
                 old_us.save()
 
