@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding field 'Subscription.enabled'
         db.add_column('subscription_subscription', 'enabled',
                       self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=False)
+                      keep_default=True)
 
 
     def backwards(self, orm):
